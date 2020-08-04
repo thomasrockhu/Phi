@@ -1,0 +1,55 @@
+name: Emscripten
+
+on: [push, pull_request]
+
+jobs:
+  Build:
+    runs-on: ubuntu-latest
+
+    env:
+      CTEST_OUTPUT_ON_FAILURE: ON
+      CTEST_PARALLEL_LEVEL: 2
+
+    strategy:
+      fail-fast: false
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          submodules: true
+
+      - name: Install cmake
+        uses: lukka/get-cmake@latest
+
+      - name: Setup Emscripten toolchain
+        uses: mymindstorm/setup-emsdk@v6
+
+      - name: Verify version
+        run: |
+          emcc -v
+          which emcc
+
+      - name: Configure build directory
+        run: |
+          mkdir build
+          cd build
+          cmake ..
+
+      - name: Build Debug
+        run: |
+          cd build
+          cmake --build . --config "Debug" --clean-first
+          ctest .
+
+      - name: Build RelWithDebInfo
+        run: |
+          cd build
+          cmake --build . --config "RelWithDebInfo" --clean-first
+          ctest .
+
+      - name: Build Release
+        run: |
+          cd build
+          cmake --build . --config "Release" --clean-first
+          ctest .
