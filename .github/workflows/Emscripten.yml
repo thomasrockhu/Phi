@@ -24,6 +24,8 @@ jobs:
 
       - name: Setup Emscripten toolchain
         uses: mymindstorm/setup-emsdk@v6
+        with:
+          actions-cache-folder: 'emsdk-cache'
 
       - name: Verify version
         run: |
