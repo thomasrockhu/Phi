@@ -31,7 +31,9 @@ jobs:
         run: |
           emcc -v
           which emcc
-          find ${{ github.workspace }} -iname Emscripten.cmake
+
+          find $EMSDK -iname Emscripten.cmake
+          ls $EMSDK
 
       - name: Configure build directory
         run: |
