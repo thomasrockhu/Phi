@@ -31,6 +31,7 @@ jobs:
         run: |
           emcc -v
           which emcc
+          find ${{ github.workspace }} -iname Emscripten.cmake
 
       - name: Configure build directory
         run: |
