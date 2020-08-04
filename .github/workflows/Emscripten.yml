@@ -36,7 +36,7 @@ jobs:
         run: |
           mkdir build
           cd build
-          cmake .. -DCMAKE_TOOLCHAIN_FILE=${{ github.workspace }}/emsdk-cache/version/cmake/Modules/Platform/Emscripten.cmake
+          cmake .. -DCMAKE_TOOLCHAIN_FILE=${{ github.workspace }}/emsdk-cache/emsdk-master/emsdk/version/cmake/Modules/Platform/Emscripten.cmake
 
       - name: Build Debug
         run: |
