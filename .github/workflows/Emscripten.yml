@@ -30,16 +30,12 @@ jobs:
       - name: Verify version
         run: |
           emcc -v
-          which emcc
-
-          find $EMSDK -iname Emscripten.cmake
-          ls $EMSDK
 
       - name: Configure build directory
         run: |
           mkdir build
           cd build
-          cmake .. -DCMAKE_TOOLCHAIN_FILE=$EMSDK/version/cmake/Modules/Platform/Emscripten.cmake
+          cmake .. -DCMAKE_TOOLCHAIN_FILE=$EMSDK/upstream/emscripten/cmake/Modules/Platform/Emscripten.cmake
 
       - name: Build Debug
         run: |
