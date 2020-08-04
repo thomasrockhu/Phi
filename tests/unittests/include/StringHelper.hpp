@@ -11,7 +11,7 @@ template <typename CharT>
     }
 
     std::size_t length{0};
-    for (; *str != CharT('\0'); ++str)
+    while (*str != '\0')
     {
         ++length;
         ++str;
@@ -33,12 +33,15 @@ template <typename CharT>
         return false;
     }
 
-    for (; *lhs != CharT('\0'); ++lhs, ++rhs)
+    while (*lhs != '\0')
     {
         if (*lhs != *rhs)
         {
             return false;
         }
+
+        ++lhs;
+        ++rhs;
     }
 
     return *lhs == *rhs;
