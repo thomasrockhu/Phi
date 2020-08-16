@@ -140,8 +140,21 @@ jobs:
           mkdir build-msan
           cd build-msan
 
+          # Build libc++ and libc++-abi with Msan
+          git clone --depth=1 https://github.com/llvm/llvm-project
+
+          cd llvm-project
+          mkdir build
+          cd build
+
+          # Configure libc++
+          cmake -GNinja ../llvm -DCMAKE_BUILD_TYPE=Release -DLLVM_ENABLE_PROJECTS="libcxx;libcxxabi" -DCMAKE_C_COMPILER=clang-${{ matrix.cfg.compiler_version }} -DCMAKE_CXX_COMPILER=clang++-${{ matrix.cfg.compiler_version }} -DLLVM_USE_SANITIZER=MemoryWithOrigins
+
+          # Build libc++
+          cmake --build . -- cxx cxxabi
+
           # Configure
-          cmake .. -DENABLE_SANITIZER_MEMORY=ON -DCMAKE_CXX_FLAGS="-fsanitize-memory-track-origins=2 -fsanitize-memory-use-after-dtor -fno-omit-frame-pointer -g"
+          cmake .. -DENABLE_SANITIZER_MEMORY=ON -DCMAKE_CXX_FLAGS="-fsanitize-memory-track-origins=2 -fsanitize-memory-use-after-dtor -fno-omit-frame-pointer -g -Wl,-rpath,llvm-project/lib"
 
           # Debug
           cmake .. -DCMAKE_BUILD_TYPE=Debug
