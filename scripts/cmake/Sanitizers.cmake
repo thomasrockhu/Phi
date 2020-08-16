@@ -15,6 +15,11 @@ function(enable_sanitizers project)
       list(APPEND sanitizers "address")
     endif()
 
+    option(ENABLE_SANITIZER_ADDRESS_POINTERS "Eanble address sanitizer pointer checks" FALSE)
+    if(ENABLE_SANITIZER_ADDRESS_POINTERS)
+      list(APPEND sanitizers "pointer-compare,pointer-subtract")
+    endif()
+
     option(ENABLE_SANITIZER_MEMORY "Enable memory sanitizer" FALSE)
     if(ENABLE_SANITIZER_MEMORY)
       list(APPEND sanitizers "memory")
