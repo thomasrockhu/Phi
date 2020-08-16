@@ -77,7 +77,7 @@ jobs:
           cd build-asan
 
           # Configure
-          cmake .. -DENABLE_SANITIZER_ADDRESS=ON -DENABLE_SANITIZER_ADDRESS_POINTERS=ON -DCMAKE_CXX_FLAGS="-fno-omit-frame-pointer -fno-common -g"
+          cmake .. -DENABLE_SANITIZER_ADDRESS=ON -DCMAKE_CXX_FLAGS="-fno-omit-frame-pointer -fno-common -g"
 
           # Debug
           cmake .. -DCMAKE_BUILD_TYPE=Debug

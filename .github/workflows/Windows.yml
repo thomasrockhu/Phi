@@ -100,7 +100,6 @@ jobs:
           ctest . -C Release
 
       - name: Build & Test with Address Sanitizer
-        continue-on-error: true
         env:
           ASAN_OPTIONS: "strict_string_checks=true:detect_odr_violation=2:detect_stack_use_after_return=true:check_initialization_order=true:strict_init_order=true:detect_invalid_pointer_pairs=3"
         if: matrix.cfg.compiler == 'clang++'
@@ -110,7 +109,7 @@ jobs:
           cd build-asan
 
           # Configure
-          cmake .. -DENABLE_SANITIZER_ADDRESS=ON -DENABLE_SANITIZER_ADDRESS_POINTERS=ON -DPHI_STANDARD_RUNTIME="Static" -DCMAKE_CXX_FLAGS="-fno-omit-frame-pointer -fno-common -g"
+          cmake .. -DENABLE_SANITIZER_ADDRESS=ON -DPHI_STANDARD_RUNTIME="Static" -DCMAKE_CXX_FLAGS="-fno-omit-frame-pointer -fno-common -g"
 
           # RelWithDebInfo
           cmake .. -DCMAKE_BUILD_TYPE=RelWithDebInfo
