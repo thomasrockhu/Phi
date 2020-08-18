@@ -132,8 +132,7 @@ jobs:
           cmake --build . --clean-first
           ctest .
 
-      - name: Build & Test with Memory Sanitizer
-        continue-on-error: true
+      - name: Configure Memory Sanitizer
         if: matrix.cfg.compiler == 'clang++'
         run: |
           # Install ninja
@@ -151,10 +150,15 @@ jobs:
           cd build
 
           # Configure libc++
-          cmake -GNinja ../llvm -DCMAKE_BUILD_TYPE=Release -DLLVM_ENABLE_PROJECTS="libcxx;libcxxabi" -DCMAKE_C_COMPILER=clang-${{ matrix.cfg.compiler_version }} -DCMAKE_CXX_COMPILER=clang++-${{ matrix.cfg.compiler_version }} -DLLVM_USE_SANITIZER=MemoryWithOrigins
+          cmake -G Ninja ../llvm -DCMAKE_BUILD_TYPE=Release -DLLVM_ENABLE_PROJECTS="libcxx;libcxxabi" -DCMAKE_C_COMPILER=clang-${{ matrix.cfg.compiler_version }} -DCMAKE_CXX_COMPILER=clang++-${{ matrix.cfg.compiler_version }} -DLLVM_USE_SANITIZER=MemoryWithOrigins
 
           # Build libc++
           cmake --build . -- cxx cxxabi
+
+      - name: Build & Test with Memory Sanitizer
+        if: matrix.cfg.compiler == 'clang++'
+        run: |
+          cd build-msan
 
           # Configure
           cmake .. -DENABLE_SANITIZER_MEMORY=ON -DCMAKE_CXX_FLAGS="-fsanitize-memory-track-origins=2 -fsanitize-memory-use-after-dtor -fno-omit-frame-pointer -g -Wl,-rpath,llvm-project/lib"
