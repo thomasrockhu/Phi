@@ -137,7 +137,7 @@ jobs:
         if: matrix.cfg.compiler == 'clang++'
         run: |
           # Install ninja
-          sudo apt-get install ninja
+          sudo apt-get install ninja-build
 
           # Create directory
           mkdir build-msan
