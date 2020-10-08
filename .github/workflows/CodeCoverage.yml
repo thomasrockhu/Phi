@@ -248,5 +248,4 @@ jobs:
           cat coverage.info
 
       - name: Upload coverage data
-        run: |
-          ./codecov -f ./build/coverage.info -F windows -F clang -n ${{ runner.os }}-clang
+        run: ./codecov -f ./build/coverage.info -F windows -F clang -n ${{ runner.os }}-clang
