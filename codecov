@@ -1505,11 +1505,21 @@ then
              -not -path '*/.git/*'"
 
   cut_and_join() {
-    awk 'BEGIN { FS="(?<![ABCDE]):" }
-         $3 ~ /\/\*/ || $3 ~ /\*\// { print $0 ; next }
-         $1!=key { if (key!="") print out ; key=$1 ; out=$1":"$2 ; next }
-         { out=out","$2 }
-         END { print out }' 2>/dev/null
+    while read line
+    do
+      # cannot split by ':' as it can be in a directory name
+      if [[ $line =~ ^(.*):([0-9]+):(.*) ]]
+      then
+        if [[ $key != ${BASH_REMATCH[1]} ]]
+        then
+          if [[ $key != '' ]]; then echo $out; fi
+          key=${BASH_REMATCH[1]}
+          out="${BASH_REMATCH[1]}:${BASH_REMATCH[2]}"
+        else
+          out="$out,${BASH_REMATCH[2]}"
+        fi
+      fi
+    done
   }
 
   if echo "$network" | grep -m1 '.kt$' 1>/dev/null;
