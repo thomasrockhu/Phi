@@ -248,10 +248,5 @@ jobs:
           cat coverage.info
 
       - name: Upload coverage data
-        uses: codecov/codecov-action@v1
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          file: ./build/coverage.info
-          flags: windows,clang
-          name: ${{ runner.os }}-clang
-          fail_ci_if_error: true
+        run: |
+          ./codecov -f ./build/coverage.info -F windows -F clang -n ${{ runner.os }}-clang
