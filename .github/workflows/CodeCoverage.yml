@@ -249,4 +249,4 @@ jobs:
 
       - name: Upload coverage data
         shell: bash
-        run: ./codecov -f ./build/coverage.info -F windows -F clang -n ${{ runner.os }}-clang
+        run: ./codecov -f ./build/coverage.info -F windows -F clang -n ${{ runner.os }}-clang -v

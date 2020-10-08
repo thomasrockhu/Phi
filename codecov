@@ -1587,6 +1587,23 @@ then
 
   if echo "$network" | grep -m1 '\(.cpp\|.h\|.cxx\|.c\|.hpp\|.m\|.swift\)$' 1>/dev/null;
   then
+    find "$git_root" -type f \
+                     $skip_dirs \
+         \( \
+           -name '*.h' \
+           -or -name '*.cpp' \
+           -or -name '*.cxx' \
+           -or -name '*.m' \
+           -or -name '*.c' \
+           -or -name '*.hpp' \
+           -or -name '*.swift' \
+         \) -exec \
+      grep -nIHE \
+           -e "$empty_line" \
+           -e "$syntax_bracket" \
+           -e '// LCOV_EXCL' \
+           {} \; \
+    say "meow meow meow"
     # skip brackets
     # shellcheck disable=SC2086,SC2090
     find "$git_root" -type f \
