@@ -1602,7 +1602,8 @@ then
            -e "$empty_line" \
            -e "$syntax_bracket" \
            -e '// LCOV_EXCL' \
-           {} \; \
+           {} \;
+
     say "meow meow meow"
     # skip brackets
     # shellcheck disable=SC2086,SC2090
