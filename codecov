@@ -1512,14 +1512,14 @@ then
       then
         if [[ $key != ${BASH_REMATCH[1]} ]]
         then
-          if [[ $key != '' ]]; then echo $out; fi
+          if [[ $key != '' ]]; then print $out; fi
           key=${BASH_REMATCH[1]}
           out="${BASH_REMATCH[1]}:${BASH_REMATCH[2]}"
         else
           out="$out,${BASH_REMATCH[2]}"
         fi
       fi
-    done
+    done 2>/dev/null
   }
 
   if echo "$network" | grep -m1 '.kt$' 1>/dev/null;
