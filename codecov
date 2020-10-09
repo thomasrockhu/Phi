@@ -1588,9 +1588,11 @@ then
   then
     # skip brackets
     # shellcheck disable=SC2086,SC2090
-    find $git_root -type f \
-                     $skip_dirs \
-         \( \
+
+    cd "$git_root" && \
+    find . -type f \
+           $skip_dirs \
+      \( \
            -name '*.h' \
            -or -name '*.cpp' \
            -or -name '*.cxx' \
@@ -1598,7 +1600,7 @@ then
            -or -name '*.c' \
            -or -name '*.hpp' \
            -or -name '*.swift' \
-         \) -exec \
+      \) -exec \
       grep -nIHE \
            -e "$empty_line" \
            -e "$syntax_bracket" \
@@ -1610,8 +1612,9 @@ then
 
     # skip brackets
     # shellcheck disable=SC2086,SC2090
-    find $git_root -type f \
-                     $skip_dirs \
+    cd "$git_root" && \
+    find . -type f \
+           $skip_dirs \
          \( \
            -name '*.h' \
            -or -name '*.cpp' \
