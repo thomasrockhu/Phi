@@ -376,7 +376,7 @@ $OPTARG"
       "t")
         if [ "${OPTARG::1}" = "@" ];
         then
-          token=$(> "${OPTARG:1}" tr -d ' \n')
+          token=$(< "${OPTARG:1}" tr -d ' \n')
         else
           token="$OPTARG"
         fi
@@ -1501,31 +1501,20 @@ then
 
   # shellcheck disable=SC2089
   skip_dirs="-not -path '*/$bower_components/*' \
-             -not -path '*/node_modules/*' \
-             -not -path '*/.git/*'"
+             -not -path '*/node_modules/*'"
 
   cut_and_join() {
-    while read line
-    do
-      # cannot split by ':' as it can be in a directory name
-      if [[ $line =~ ^(.*):([0-9]+):(.*) ]]
-      then
-        if [[ $key != ${BASH_REMATCH[1]} ]]
-        then
-          if [[ $key != '' ]]; then print $out; fi
-          key=${BASH_REMATCH[1]}
-          out="${BASH_REMATCH[1]}:${BASH_REMATCH[2]}"
-        else
-          out="$out,${BASH_REMATCH[2]}"
-        fi
-      fi
-    done 2>/dev/null
+    awk 'BEGIN { FS=":" }
+         $3 ~ /\/\*/ || $3 ~ /\*\// { print $0 ; next }
+         $1!=key { if (key!="") print out ; key=$1 ; out=$1":"$2 ; next }
+         { out=out","$2 }
+         END { print out }' 2>/dev/null
   }
 
   if echo "$network" | grep -m1 '.kt$' 1>/dev/null;
   then
     # skip brackets and comments
-    find "$git_root" -type f \
+    find $git_root -type f \
                      -name '*.kt' \
                      -exec \
       grep -nIHE -e "$syntax_bracket" \
@@ -1535,7 +1524,7 @@ then
       || echo ''
 
     # last line in file
-    find "$git_root" -type f \
+    find $git_root -type f \
                      -name '*.kt' -exec \
       wc -l {} \; \
       | while read -r l; do echo "EOF: $l"; done \
@@ -1547,7 +1536,7 @@ then
   if echo "$network" | grep -m1 '.go$' 1>/dev/null;
   then
     # skip empty lines, comments, and brackets
-    find "$git_root" -not -path '*/vendor/*' \
+    find $git_root -not -path '*/vendor/*' \
                      -not -path '*/caches/*' \
                      -type f \
                      -name '*.go' \
@@ -1567,7 +1556,7 @@ then
   if echo "$network" | grep -m1 '.dart$' 1>/dev/null;
   then
     # skip brackets
-    find "$git_root" -type f \
+    find $git_root -type f \
                      -name '*.dart' \
                      -exec \
       grep -nIHE \
@@ -1581,7 +1570,7 @@ then
   if echo "$network" | grep -m1 '.php$' 1>/dev/null;
   then
     # skip empty lines, comments, and brackets
-    find "$git_root" -not -path "*/vendor/*" \
+    find $git_root -not -path "*/vendor/*" \
                      -type f \
                      -name '*.php' \
                      -exec \
@@ -1597,27 +1586,9 @@ then
 
   if echo "$network" | grep -m1 '\(.cpp\|.h\|.cxx\|.c\|.hpp\|.m\|.swift\)$' 1>/dev/null;
   then
-    find "$git_root" -type f \
-                     $skip_dirs \
-         \( \
-           -name '*.h' \
-           -or -name '*.cpp' \
-           -or -name '*.cxx' \
-           -or -name '*.m' \
-           -or -name '*.c' \
-           -or -name '*.hpp' \
-           -or -name '*.swift' \
-         \) -exec \
-      grep -nIHE \
-           -e "$empty_line" \
-           -e "$syntax_bracket" \
-           -e '// LCOV_EXCL' \
-           {} \;
-
-    say "meow meow meow"
     # skip brackets
     # shellcheck disable=SC2086,SC2090
-    find "$git_root" -type f \
+    find $git_root -type f \
                      $skip_dirs \
          \( \
            -name '*.h' \
@@ -1639,7 +1610,7 @@ then
 
     # skip brackets
     # shellcheck disable=SC2086,SC2090
-    find "$git_root" -type f \
+    find $git_root -type f \
                      $skip_dirs \
          \( \
            -name '*.h' \
